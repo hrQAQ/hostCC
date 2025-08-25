@@ -63,7 +63,7 @@ void poll_iio_exit(void) {
     //dump log info
     printk(KERN_INFO "Ending IIO Occupancy measurement");
     flush_workqueue(poll_iio_queue);
-    flush_scheduled_work();
+    // flush_scheduled_work();
     destroy_workqueue(poll_iio_queue);
     if(mode == 0){
       if(IIO_LOGGING){
@@ -118,7 +118,7 @@ void poll_pcie_exit(void) {
     //dump log info
     printk(KERN_INFO "Ending PCIe Bandwidth Measurement");
     flush_workqueue(poll_pcie_queue);
-    flush_scheduled_work();
+    // flush_scheduled_work();
     destroy_workqueue(poll_pcie_queue);
     if(latest_mba_val > 0){
         latest_mba_val = 0;

@@ -3,9 +3,6 @@
 
 #include "hostcc.h"
 
-static struct nf_hook_ops *nf_markecn_ops_rx = NULL;
-static struct nf_hook_ops *nf_markecn_ops_tx = NULL;
-
 enum {
 	INET_ECN_NOT_ECT = 0,
 	INET_ECN_ECT_1 = 1,

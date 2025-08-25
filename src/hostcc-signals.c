@@ -1,7 +1,7 @@
 #include "hostcc-signals.h"
 
-extern bool terminate_hcc = false;
-extern bool terminate_hcc_logging = false;
+bool terminate_hcc = false;
+bool terminate_hcc_logging = false;
 uint64_t last_changed_level_tsc = 0;
 int target_pid = 0;
 int target_pcie_thresh = 84;
@@ -99,7 +99,8 @@ void update_iio_wr_occ_ctl_reg(void){
   uint64_t msr_num;
 	msr_num = IRP_MSR_PMON_CTL_BASE + (0x20 * NIC_IIO_STACK) + IIO_WR_COUNTER_OFFSET;
   uint32_t low = IRP_OCC_VAL & 0xFFFFFFFF;
-	uint32_t high = IRP_OCC_VAL >> 32;
+  uint32_t high = 0;
+	// uint32_t high = IRP_OCC_VAL >> 32;
   wrmsr_on_cpu(IIO_CORE,msr_num,low,high);
 }
 

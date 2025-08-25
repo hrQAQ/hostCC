@@ -76,4 +76,9 @@ extern bool terminate_hcc_logging;
 
 
 
-
+void poll_iio_init(void);
+void poll_iio_exit(void);
+void thread_fun_poll_iio(struct work_struct *work);
+void poll_pcie_init(void);
+void poll_pcie_exit(void);
+void thread_fun_poll_pcie(struct work_struct *work);

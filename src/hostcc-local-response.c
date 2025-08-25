@@ -6,8 +6,8 @@ extern uint32_t smoothed_avg_pcie_bw;
 extern uint32_t smoothed_avg_pcie_bw_rd;
 extern uint32_t latest_measured_avg_occ_wr;
 extern uint32_t latest_measured_avg_occ_rd;
-extern struct task_struct *app_pid_task = NULL;
-extern struct pid *app_pid_struct = NULL;
+struct task_struct *app_pid_task = NULL;
+struct pid *app_pid_struct = NULL;
 extern uint32_t app_pid;
 extern int mode;
 extern int target_pid;
@@ -31,7 +31,7 @@ void update_mba_msr_register(void){
 }
 
 //helper function to send SIGCONT/SIGSTOP signals to processes
-static int send_signal_to_pid(int proc_pid, int signal)
+int send_signal_to_pid(int proc_pid, int signal)
 {
     if(app_pid_struct != NULL){
       rcu_read_lock();
@@ -43,7 +43,7 @@ static int send_signal_to_pid(int proc_pid, int signal)
 
 void init_mba_process_scheduler(void){
     app_pid = target_pid;
-    printk("MLC PID: %ld\n",app_pid);
+    printk("MLC PID: %u\n",app_pid);
     app_pid_task = pid_task(find_get_pid(app_pid), PIDTYPE_PID);
     app_pid_struct = find_vpid(app_pid);
     if (app_pid_task == NULL) {
@@ -51,12 +51,14 @@ void init_mba_process_scheduler(void){
     }
     else{
       printk(KERN_INFO "Found task");
-      struct sched_param param;
-      param.sched_priority = 99;
-      int result = sched_setscheduler(app_pid_task, SCHED_FIFO, &param);
-      if (result == -1) {
-          printk(KERN_ALERT "Failed to set scheduling policy and priority\n");
-      }
+      sched_set_fifo(app_pid_task);
+      //   struct sched_param param;
+      //   param.sched_priority = 99;
+      //   int result = sched_setscheduler(app_pid_task, SCHED_FIFO, &param);
+      //   if (result == -1) {
+      //       printk(KERN_ALERT "Failed to set scheduling policy and
+      //       priority\n");
+      //   }
     }
 }
 
@@ -73,7 +75,8 @@ void update_mba_process_scheduler(void){
 void increase_mba_val(void){
     uint64_t msr_num = PQOS_MSR_MBA_MASK_START + MBA_COS_ID;
     u32 low = MBA_VAL_HIGH & 0xFFFFFFFF;
-	  u32 high = MBA_VAL_HIGH >> 32;
+    u32 high = 0;
+	//   u32 high = MBA_VAL_HIGH >> 32;
 
     // WARN_ON(!(latest_mba_val >= 0));
     #if !(USE_PROCESS_SCHEDULER)
@@ -118,7 +121,8 @@ void decrease_mba_val(void){
     }
     uint64_t msr_num = PQOS_MSR_MBA_MASK_START + MBA_COS_ID;
     uint32_t low = MBA_VAL_LOW & 0xFFFFFFFF;
-	  uint32_t high = MBA_VAL_LOW >> 32;
+    uint32_t high = 0;
+	//   uint32_t high = MBA_VAL_LOW >> 32;
 
     // WARN_ON(!(latest_mba_val >= 0));
     #if !(USE_PROCESS_SCHEDULER)

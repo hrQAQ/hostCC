@@ -5,6 +5,8 @@
 DEFINE_SPINLOCK(etx_spinlock_rx);
 DEFINE_SPINLOCK(etx_spinlock_tx);
 
+static struct nf_hook_ops* nf_markecn_ops_rx = NULL;
+static struct nf_hook_ops* nf_markecn_ops_tx = NULL;
 uint64_t latest_measured_avg_occ_wr_nf = 0;
 uint64_t latest_measured_avg_occ_rd_nf = 0;
 uint64_t latest_time_delta_nf_ns = 0;
